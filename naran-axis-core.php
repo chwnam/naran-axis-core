@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name:       Axis
+ * Plugin Name:       Naran Axis Core
  * Description:       A WordPress must-use (MU) plugin for developing highly customized, modern PHP based websites.
- * Version:           4.0.0
- * Plugin URI:        https://github.com/chwnam/axis4/
+ * Version:           0.0.0
+ * Plugin URI:        https://github.com/chwnam/naran-axis-core
  * Author:            Changwoo
  * Author URI:        https://blog.changwoo.pe.kr
  * Textdomain:        axis
@@ -12,7 +12,7 @@
  * Requires at least: 5.5
  * Requires PHP:      7.4
  * License:           GPLv2 or later
- * License URI:       https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ * License URI:       https://github.com/chwnam/naran-axis-core/blob/main/LICENSE
  */
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
