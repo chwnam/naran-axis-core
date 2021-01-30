@@ -11,15 +11,15 @@ class LayoutFactory
         try {
             $args = wp_parse_args($args, static::getDefaultArgs());
 
-            if (empty($args['mainFile'])) {
-                throw new LayoutFailException('Argument \'mainFile\' is required for plugin layout.');
+            if (empty($args['main_file'])) {
+                throw new LayoutFailException('Argument \'main_file\' is required for plugin layout.');
             }
 
             if (empty($args['slug'])) {
-                $dirname    = dirname($args['mainFile']);
+                $dirname    = dirname($args['main_file']);
                 $pluginPath = untrailingslashit(wp_normalize_path(WP_PLUGIN_DIR));
                 if ($dirname === $pluginPath) {
-                    $args['slug'] = pathinfo($args['mainFile'], PATHINFO_FILENAME);
+                    $args['slug'] = pathinfo($args['main_file'], PATHINFO_FILENAME);
                 } else {
                     $args['slug'] = pathinfo($dirname, PATHINFO_BASENAME);
                 }
@@ -31,7 +31,7 @@ class LayoutFactory
 
             $layout = new PluginLayout();
 
-            $layout->setMainFile($args['mainFile']);
+            $layout->setMainFile($args['main_file']);
             $layout->setSlug($args['slug']);
             self::setOptionalArgs($layout, $args);
         } catch (LayoutFailException $e) {
@@ -70,12 +70,12 @@ class LayoutFactory
     private static function getDefaultArgs(): array
     {
         return [
-            'mainFile'        => '',
+            'main_file'       => '',
             'slug'            => '',
             'textdomain'      => '',
             'title'           => '',
             'version'         => '',
-            'schemePath'      => null,
+            'scheme_path'     => null,
             'module_provider' => null,
         ];
     }
@@ -94,8 +94,8 @@ class LayoutFactory
             $layout->setVersion($args['version']);
         }
 
-        if (!empty($args['schemePath'])) {
-            $layout->setSchemePath($args['schemePath']);
+        if ( ! empty($args['scheme_path'])) {
+            $layout->setSchemePath($args['scheme_path']);
         } elseif ($layout instanceof PluginLayout) {
             $layout->setSchemePath(dirname($layout->getMainFile()) . '/src/scheme.php');
         } elseif ($layout instanceof ThemeLayout) {
