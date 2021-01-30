@@ -8,12 +8,12 @@ namespace Naran\Axis\Core\Scheme\Registrables;
  *
  * @package Naran\Axis\Core\Scheme\Registrables
  *
- * @property-read string $type
- * @property-read string $description
+ * @property-read string    $type
+ * @property-read string    $description
  * @property-read ?callable $sanitize_callback
- * @property-read bool $show_in_rest
- * @property-read mixed $default
- * @property-read bool $autoload
+ * @property-read bool      $show_in_rest
+ * @property-read mixed     $default
+ * @property-read bool      $autoload
  */
 class Option implements RegistrableInterface
 {
@@ -30,7 +30,7 @@ class Option implements RegistrableInterface
      *
      * @param string $optionGroup
      * @param string $optionName
-     * @param array $args
+     * @param array  $args
      */
     public function __construct(string $optionGroup, string $optionName, array $args = [])
     {

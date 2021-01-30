@@ -5,6 +5,7 @@ namespace Naran\Axis\Core\Scheme;
 use Naran\Axis\Core\Layout\LayoutInterface;
 use Naran\Axis\Core\Scheme\Registerers\AjaxRegisterer;
 use Naran\Axis\Core\Scheme\Registerers\BlockRegisterer;
+use Naran\Axis\Core\Scheme\Registerers\CronRecurrenceRegisterer;
 use Naran\Axis\Core\Scheme\Registerers\CronRegisterer;
 use Naran\Axis\Core\Scheme\Registerers\MetaRegisterer;
 use Naran\Axis\Core\Scheme\Registerers\OptionRegisterer;
@@ -53,6 +54,10 @@ class SchemeLoader
             new CronRegisterer($this->layout, $s->get(Scheme::CRON));
         }
 
+        if ($s->isTypeEnabled(Scheme::CRON_RECURRENCE)) {
+            new CronRecurrenceRegisterer($this->layout, $s->get(Scheme::CRON_RECURRENCE));
+        }
+
         if ($s->isTypeEnabled(Scheme::META)) {
             new MetaRegisterer($this->layout, $s->get(Scheme::META));
         }
@@ -68,9 +73,9 @@ class SchemeLoader
         if ($s->isTypeEnabled(Scheme::SCRIPT)) {
             new ScriptRegisterer(
                 $this->layout,
-                $s->get(Scheme::SCRIPT . '/common'),
-                $s->get(Scheme::SCRIPT . '/admin'),
-                $s->get(Scheme::SCRIPT . '/front')
+                $s->get(Scheme::SCRIPT_COMMON),
+                $s->get(Scheme::SCRIPT_ADMIN),
+                $s->get(Scheme::SCRIPT_FRONT)
             );
         }
 
@@ -81,9 +86,9 @@ class SchemeLoader
         if ($s->isTypeEnabled(Scheme::STYLE)) {
             new StyleRegisterer(
                 $this->layout,
-                $s->get(Scheme::STYLE . '/common'),
-                $s->get(Scheme::STYLE . '/admin'),
-                $s->get(Scheme::STYLE . '/front')
+                $s->get(Scheme::STYLE_COMMON),
+                $s->get(Scheme::STYLE_ADMIN),
+                $s->get(Scheme::STYLE_FRONT)
             );
         }
 

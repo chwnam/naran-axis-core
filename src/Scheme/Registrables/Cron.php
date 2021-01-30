@@ -72,7 +72,7 @@ class Cron implements RegistrableInterface
 
     public function unregister()
     {
-        if ($this->hook) {
+        if ($this->hook && wp_next_scheduled($this->hook)) {
             wp_unschedule_hook($this->hook);
         }
     }
