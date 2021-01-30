@@ -86,7 +86,7 @@ class LayoutFactory
         try {
             $args = wp_parse_args($args, static::getDefaultArgs());
 
-            if ($args['slug']) {
+            if (empty($args['slug'])) {
                 throw new LayoutFailException('Argument \'slug\' is required for a theme layout.');
             }
 
