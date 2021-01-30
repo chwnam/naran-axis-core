@@ -15,9 +15,17 @@
  * License URI:       https://github.com/chwnam/naran-axis-core/blob/main/LICENSE
  */
 
-define('NARAN_AXIS_CORE_MAIN', __FILE__);
-define('NARAN_AXIS_VERSION', '0.0.0');
-
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
+    define('NARAN_AXIS_CORE_MAIN', __FILE__);
+    define('NARAN_AXIS_VERSION', '0.0.0');
+} else {
+    add_action(
+        'admin_notices',
+        function () {
+            echo '<div class="notice notice-error"><p>'
+                . __('Please run \'composer da\' to run Naran Axis Core plugin correctly.', 'axis')
+                . '</p></div>';
+        }
+    );
 }
