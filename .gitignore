@@ -1,0 +1,13 @@
+.idea
+.DS_Store
+*.log
+*.html
+*.bak
+
+node_modules
+
+vendor/*
+
+# You may want to include only autoloader scripts. Uncomment these two lines.
+# !vendor/autoload.php
+# !vendor/composer
