@@ -20,8 +20,6 @@ final class LayoutPool
         self::$layouts[$name] = $layout;
     }
 
-    /** @noinspection PhpUnusedPrivateMethodInspection */
-
     /**
      * @param string $layoutName
      *
@@ -37,8 +35,6 @@ final class LayoutPool
         throw new LayoutNotFoundException("Layout {$layoutName} is not added.");
     }
 
-    /** @noinspection PhpUnusedPrivateMethodInspection */
-
     public static function has(string $layoutName): bool
     {
         return isset(self::$layouts[$layoutName]);
@@ -49,11 +45,13 @@ final class LayoutPool
         wp_die('Cloning LayoutPool is not allowed.');
     }
 
+    /** @noinspection PhpUnusedPrivateMethodInspection */
     private function __sleep()
     {
         wp_die('Serializing LayoutPool is not allowed.');
     }
 
+    /** @noinspection PhpUnusedPrivateMethodInspection */
     private function __wakeup()
     {
         wp_die('Unserializing LayoutPool is not allowed.');
