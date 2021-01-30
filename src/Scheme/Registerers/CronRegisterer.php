@@ -14,7 +14,7 @@ class CronRegisterer implements RegistererInterface
     /** @var ?Closure */
     private ?Closure $registrables;
 
-    public function __construct(LayoutInterface $layout,?Closure  $registrables)
+    public function __construct(LayoutInterface $layout, ?Closure $registrables)
     {
         $this->layout       = $layout;
         $this->registrables = $registrables;
@@ -23,20 +23,16 @@ class CronRegisterer implements RegistererInterface
         add_action('naran_axis_deactivation', [$this, 'deactivationCleanup']);
     }
 
+    public function activationSetup()
+    {
+        $this->registerItems();
+    }
+
     public function registerItems()
     {
         foreach ($this->getItems() as $item) {
             if ($item instanceof Cron) {
                 $item->register();
-            }
-        }
-    }
-
-    public function unregisterItems()
-    {
-        foreach ($this->getItems() as $item) {
-            if ($item instanceof Cron) {
-                $item->unregister();
             }
         }
     }
@@ -52,13 +48,17 @@ class CronRegisterer implements RegistererInterface
         return apply_filters('naran_axis_cron_registrables', $items, $this->layout->getSlug());
     }
 
-    public function activationSetup()
-    {
-        $this->registerItems();
-    }
-
     public function deactivationCleanup()
     {
         $this->unregisterItems();
+    }
+
+    public function unregisterItems()
+    {
+        foreach ($this->getItems() as $item) {
+            if ($item instanceof Cron) {
+                $item->unregister();
+            }
+        }
     }
 }

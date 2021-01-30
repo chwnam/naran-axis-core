@@ -1,22 +1,27 @@
 <?php
 
+use Naran\Axis\Core\Layout\LayoutFactory;
+use Naran\Axis\Core\Layout\LayoutInterface;
+use Naran\Axis\Core\Layout\LayoutNotFoundException;
+use Naran\Axis\Core\Layout\LayoutPool;
+
 function axisStartPlugin(array $args = [])
 {
-    \Naran\Axis\Core\Layout\LayoutFactory::pluginLayout($args)->start();
+    LayoutFactory::pluginLayout($args)->start();
 }
 
 
 function axisStartTheme(array $args = [])
 {
-    \Naran\Axis\Core\Layout\LayoutFactory::themeLayout($args)->start();
+    LayoutFactory::themeLayout($args)->start();
 }
 
 
-function axisGetLayout(string $name): ?\Naran\Axis\Core\Layout\LayoutInterface
+function axisGetLayout(string $name): ?LayoutInterface
 {
     try {
-        return \Naran\Axis\Core\Layout\LayoutPool::get($name);
-    } catch (\Naran\Axis\Core\Layout\LayoutNotFoundException $e) {
+        return LayoutPool::get($name);
+    } catch (LayoutNotFoundException $e) {
         return null;
     }
 }

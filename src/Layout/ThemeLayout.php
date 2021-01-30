@@ -18,7 +18,7 @@ class ThemeLayout extends BaseLayout
     {
         $textdomain = $this->getTextdomain();
 
-        if (!empty($textdomain)) {
+        if ( ! empty($textdomain)) {
             load_theme_textdomain($textdomain, get_stylesheet_directory() . '/languages');
         }
 

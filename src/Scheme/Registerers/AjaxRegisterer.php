@@ -32,16 +32,6 @@ class AjaxRegisterer implements RegistererInterface
         }
     }
 
-    public function unregisterItems()
-    {
-        foreach ($this->getItems() as $item) {
-            if ($item instanceof Ajax) {
-                // TODO: parse callback
-                $item->unregister();
-            }
-        }
-    }
-
     public function getItems(): array
     {
         if ($this->registrables) {
@@ -51,5 +41,15 @@ class AjaxRegisterer implements RegistererInterface
         }
 
         return apply_filters('naran_axis_ajax_registrables', $items, $this->layout->getSlug());
+    }
+
+    public function unregisterItems()
+    {
+        foreach ($this->getItems() as $item) {
+            if ($item instanceof Ajax) {
+                // TODO: parse callback
+                $item->unregister();
+            }
+        }
     }
 }

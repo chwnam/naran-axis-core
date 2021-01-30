@@ -3,17 +3,6 @@
 
 namespace Naran\Axis\Core\Layout;
 
-use Naran\Axis\Core\Scheme\Registerers\AjaxRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\BlockRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\CronRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\MetaRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\OptionRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\PostTypeRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\ScriptRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\ShortcodeRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\StyleRegisterer;
-use Naran\Axis\Core\Scheme\Registerers\TaxonomyRegisterer;
-use Naran\Axis\Core\Scheme\Scheme;
 use Naran\Axis\Core\Scheme\SchemeLoader;
 
 
@@ -31,16 +20,6 @@ abstract class BaseLayout implements LayoutInterface
     private string $title = '';
 
     private string $version = '';
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug)
-    {
-        $this->slug = $slug;
-    }
 
     public function getTextdomain(): string
     {
@@ -98,18 +77,34 @@ abstract class BaseLayout implements LayoutInterface
         do_action('naran_axis_activation', $this->getSlug());
     }
 
-    public function deactivation()
+    protected function loadModules()
     {
-        $this->loadModules();
-        $this->loadScheme();
-        do_action('naran_axis_deactivation', $this->getSlug());
+        static $moduleLoaded = false;
+
+        if ( ! $moduleLoaded) {
+            $moduleLoaded = true;
+
+//            new ModuleLoader($this);
+
+            do_action('naran_axis_modules_loaded', $this->getSlug());
+        }
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug)
+    {
+        $this->slug = $slug;
     }
 
     protected function loadScheme()
     {
         static $schemeLoaded = false;
 
-        if (!$schemeLoaded) {
+        if ( ! $schemeLoaded) {
             $schemeLoaded = true;
 
             new SchemeLoader($this);
@@ -118,16 +113,10 @@ abstract class BaseLayout implements LayoutInterface
         }
     }
 
-    protected function loadModules()
+    public function deactivation()
     {
-        static $moduleLoaded = false;
-
-        if (!$moduleLoaded) {
-            $moduleLoaded = true;
-
-//            new ModuleLoader($this);
-
-            do_action('naran_axis_modules_loaded', $this->getSlug());
-        }
+        $this->loadModules();
+        $this->loadScheme();
+        do_action('naran_axis_deactivation', $this->getSlug());
     }
 }

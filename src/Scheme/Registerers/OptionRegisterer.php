@@ -14,7 +14,7 @@ class OptionRegisterer implements RegistererInterface
     /** @var ?Closure */
     private ?Closure $registrables;
 
-    public function __construct(LayoutInterface $layout,?Closure  $registrables)
+    public function __construct(LayoutInterface $layout, ?Closure $registrables)
     {
         $this->layout       = $layout;
         $this->registrables = $registrables;
@@ -23,15 +23,6 @@ class OptionRegisterer implements RegistererInterface
     }
 
     public function registerItems()
-    {
-        foreach ($this->getItems() as $key => $item) {
-            if ($item instanceof Option) {
-                $item->register();
-            }
-        }
-    }
-
-    public function unregisterItems()
     {
         foreach ($this->getItems() as $key => $item) {
             if ($item instanceof Option) {
@@ -49,5 +40,14 @@ class OptionRegisterer implements RegistererInterface
         }
 
         return apply_filters('naran_axis_ajax_registrable', $items, $this->layout->getSlug());
+    }
+
+    public function unregisterItems()
+    {
+        foreach ($this->getItems() as $key => $item) {
+            if ($item instanceof Option) {
+                $item->register();
+            }
+        }
     }
 }

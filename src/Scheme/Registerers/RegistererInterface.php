@@ -3,10 +3,11 @@
 
 namespace Naran\Axis\Core\Scheme\Registerers;
 
-interface RegistererInterface {
-	public function registerItems();
+interface RegistererInterface
+{
+    public function registerItems();
 
-	public function unregisterItems();
+    public function unregisterItems();
 
-	public function getItems();
+    public function getItems();
 }

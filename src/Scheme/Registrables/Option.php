@@ -8,12 +8,12 @@ namespace Naran\Axis\Core\Scheme\Registrables;
  *
  * @package Naran\Axis\Core\Scheme\Registrables
  *
- * @property-read string    $type
- * @property-read string    $description
+ * @property-read string $type
+ * @property-read string $description
  * @property-read ?callable $sanitize_callback
- * @property-read bool      $show_in_rest
- * @property-read mixed     $default
- * @property-read bool      $autoload
+ * @property-read bool $show_in_rest
+ * @property-read mixed $default
+ * @property-read bool $autoload
  */
 class Option implements RegistrableInterface
 {
@@ -24,6 +24,20 @@ class Option implements RegistrableInterface
     private string $optionName;
 
     private array $args;
+
+    /**
+     * WPDL_Option constructor.
+     *
+     * @param string $optionGroup
+     * @param string $optionName
+     * @param array $args
+     */
+    public function __construct(string $optionGroup, string $optionName, array $args = [])
+    {
+        $this->optionGroup = $optionGroup;
+        $this->optionName  = $optionName;
+        $this->args        = $args;
+    }
 
     public static function factory(string $optionGroup, string $optionName): ?Option
     {
@@ -40,20 +54,6 @@ class Option implements RegistrableInterface
         }
 
         return null;
-    }
-
-    /**
-     * WPDL_Option constructor.
-     *
-     * @param string $optionGroup
-     * @param string $optionName
-     * @param array  $args
-     */
-    public function __construct(string $optionGroup, string $optionName, array $args = [])
-    {
-        $this->optionGroup = $optionGroup;
-        $this->optionName  = $optionName;
-        $this->args        = $args;
     }
 
     /**
@@ -139,6 +139,15 @@ class Option implements RegistrableInterface
         return get_option($this->optionName, $this->default);
     }
 
+    public function updateFromRequest(): bool
+    {
+        if (isset($_REQUEST[$this->optionName]) && is_callable($this->sanitize_callback)) {
+            return $this->update($_REQUEST[$this->optionName]);
+        } else {
+            return false;
+        }
+    }
+
     /**
      * @param mixed $value
      *
@@ -147,15 +156,6 @@ class Option implements RegistrableInterface
     public function update($value): bool
     {
         return update_option($this->optionName, $value, $this->autoload);
-    }
-
-    public function updateFromRequest(): bool
-    {
-        if (isset($_REQUEST[$this->optionName]) && is_callable($this->sanitize_callback)) {
-            return $this->update($_REQUEST[$this->optionName]);
-        } else {
-            return false;
-        }
     }
 
     /**

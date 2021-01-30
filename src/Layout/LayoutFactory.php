@@ -43,6 +43,44 @@ class LayoutFactory
         return $layout;
     }
 
+    private static function getDefaultArgs(): array
+    {
+        return [
+            'main_file'       => '',
+            'slug'            => '',
+            'textdomain'      => '',
+            'title'           => '',
+            'version'         => '',
+            'scheme_path'     => null,
+            'module_provider' => null,
+        ];
+    }
+
+    private static function setOptionalArgs(LayoutInterface $layout, array $args)
+    {
+        if ( ! empty($args['textdomain'])) {
+            $layout->setTextdomain($args['textdomain']);
+        }
+
+        if ( ! empty($args['title'])) {
+            $layout->setTitle($args['title']);
+        }
+
+        if ( ! empty($args['version'])) {
+            $layout->setVersion($args['version']);
+        }
+
+        if ( ! empty($args['scheme_path'])) {
+            $layout->setSchemePath($args['scheme_path']);
+        } elseif ($layout instanceof PluginLayout) {
+            $layout->setSchemePath(dirname($layout->getMainFile()) . '/src/scheme.php');
+        } elseif ($layout instanceof ThemeLayout) {
+            $layout->setSchemePath(get_stylesheet_directory() . '/src/scheme.php');
+        }
+
+        $layout->setModuleProvider($args['module_provider']);
+    }
+
     public static function themeLayout(array $args = []): ThemeLayout
     {
         try {
@@ -65,43 +103,5 @@ class LayoutFactory
         LayoutPool::add($layout);
 
         return $layout;
-    }
-
-    private static function getDefaultArgs(): array
-    {
-        return [
-            'main_file'       => '',
-            'slug'            => '',
-            'textdomain'      => '',
-            'title'           => '',
-            'version'         => '',
-            'scheme_path'     => null,
-            'module_provider' => null,
-        ];
-    }
-
-    private static function setOptionalArgs(LayoutInterface $layout, array $args)
-    {
-        if (!empty($args['textdomain'])) {
-            $layout->setTextdomain($args['textdomain']);
-        }
-
-        if (!empty($args['title'])) {
-            $layout->setTitle($args['title']);
-        }
-
-        if (!empty($args['version'])) {
-            $layout->setVersion($args['version']);
-        }
-
-        if ( ! empty($args['scheme_path'])) {
-            $layout->setSchemePath($args['scheme_path']);
-        } elseif ($layout instanceof PluginLayout) {
-            $layout->setSchemePath(dirname($layout->getMainFile()) . '/src/scheme.php');
-        } elseif ($layout instanceof ThemeLayout) {
-            $layout->setSchemePath(get_stylesheet_directory() . '/src/scheme.php');
-        }
-
-        $layout->setModuleProvider($args['module_provider']);
     }
 }

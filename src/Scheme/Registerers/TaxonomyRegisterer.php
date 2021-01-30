@@ -14,7 +14,7 @@ class TaxonomyRegisterer implements RegistererInterface
     /** @var ?Closure */
     private ?Closure $registrables;
 
-    public function __construct(LayoutInterface $layout,?Closure  $registrables)
+    public function __construct(LayoutInterface $layout, ?Closure $registrables)
     {
         $this->layout       = $layout;
         $this->registrables = $registrables;
@@ -31,15 +31,6 @@ class TaxonomyRegisterer implements RegistererInterface
         }
     }
 
-    public function unregisterItems()
-    {
-        foreach ($this->getItems() as $item) {
-            if ($item instanceof Taxonomy) {
-                $item->unregister();
-            }
-        }
-    }
-
     public function getItems(): array
     {
         if (is_callable($this->registrables)) {
@@ -49,5 +40,14 @@ class TaxonomyRegisterer implements RegistererInterface
         }
 
         return apply_filters('naran_axis_taxonomy_registrables', $items, $this->layout->getSlug());
+    }
+
+    public function unregisterItems()
+    {
+        foreach ($this->getItems() as $item) {
+            if ($item instanceof Taxonomy) {
+                $item->unregister();
+            }
+        }
     }
 }

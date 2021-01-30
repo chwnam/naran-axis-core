@@ -17,7 +17,7 @@ class ShortcodeRegisterer implements RegistererInterface
     /** @var array<string, string|array|callable> */
     private array $postContentChecks = [];
 
-    public function __construct(LayoutInterface $layout,?Closure  $registrables)
+    public function __construct(LayoutInterface $layout, ?Closure $registrables)
     {
         $this->layout       = $layout;
         $this->registrables = $registrables;
@@ -38,16 +38,6 @@ class ShortcodeRegisterer implements RegistererInterface
         }
     }
 
-    public function unregisterItems()
-    {
-        foreach ($this->getItems() as $item) {
-            if ($item instanceof Shortcode) {
-                $item->unregister();
-            }
-        }
-        $this->postContentChecks = [];
-    }
-
     public function getItems(): array
     {
         if (is_callable($this->registrables)) {
@@ -57,6 +47,16 @@ class ShortcodeRegisterer implements RegistererInterface
         }
 
         return apply_filters('naran_axis_shortcode_registrables', $items, $this->layout->getSlug());
+    }
+
+    public function unregisterItems()
+    {
+        foreach ($this->getItems() as $item) {
+            if ($item instanceof Shortcode) {
+                $item->unregister();
+            }
+        }
+        $this->postContentChecks = [];
     }
 
     public function checkShortcodeInPostContent()

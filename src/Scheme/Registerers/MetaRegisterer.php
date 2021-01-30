@@ -31,15 +31,6 @@ class MetaRegisterer implements RegistererInterface
         }
     }
 
-    public function unregisterItems()
-    {
-        foreach ($this->getItems() as $key => $item) {
-            if ($item instanceof Meta) {
-                $item->unregister();
-            }
-        }
-    }
-
     public function getItems(): array
     {
         if (is_callable($this->registrables)) {
@@ -49,5 +40,14 @@ class MetaRegisterer implements RegistererInterface
         }
 
         return apply_filters('naran_axis_meta_registrables', $items, $this->layout->getSlug());
+    }
+
+    public function unregisterItems()
+    {
+        foreach ($this->getItems() as $key => $item) {
+            if ($item instanceof Meta) {
+                $item->unregister();
+            }
+        }
     }
 }

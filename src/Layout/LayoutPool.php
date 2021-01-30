@@ -11,23 +11,6 @@ final class LayoutPool
     {
     }
 
-    private function __clone()
-    {
-        wp_die('Cloning LayoutPool is not allowed.');
-    }
-
-    /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function __sleep()
-    {
-        wp_die('Serializing LayoutPool is not allowed.');
-    }
-
-    /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function __wakeup()
-    {
-        wp_die('Unserializing LayoutPool is not allowed.');
-    }
-
     public static function add(LayoutInterface $layout, string $name = '')
     {
         if (empty($name)) {
@@ -37,8 +20,11 @@ final class LayoutPool
         self::$layouts[$name] = $layout;
     }
 
+    /** @noinspection PhpUnusedPrivateMethodInspection */
+
     /**
      * @param string $layoutName
+     *
      * @return LayoutInterface
      * @throws LayoutNotFoundException
      */
@@ -51,8 +37,25 @@ final class LayoutPool
         throw new LayoutNotFoundException("Layout {$layoutName} is not added.");
     }
 
+    /** @noinspection PhpUnusedPrivateMethodInspection */
+
     public static function has(string $layoutName): bool
     {
         return isset(self::$layouts[$layoutName]);
+    }
+
+    private function __clone()
+    {
+        wp_die('Cloning LayoutPool is not allowed.');
+    }
+
+    private function __sleep()
+    {
+        wp_die('Serializing LayoutPool is not allowed.');
+    }
+
+    private function __wakeup()
+    {
+        wp_die('Unserializing LayoutPool is not allowed.');
     }
 }

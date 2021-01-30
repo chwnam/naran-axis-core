@@ -15,6 +15,9 @@
  * License URI:       https://github.com/chwnam/naran-axis-core/blob/main/LICENSE
  */
 
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require_once __DIR__ . '/vendor/autoload.php';
+define('NARAN_AXIS_CORE_MAIN', __FILE__);
+define('NARAN_AXIS_VERSION', '0.0.0');
+
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
 }

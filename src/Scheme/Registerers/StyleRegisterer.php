@@ -41,15 +41,6 @@ class StyleRegisterer implements RegistererInterface
         }
     }
 
-    public function unregisterItems()
-    {
-        foreach ($this->getItems() as $item) {
-            if ($item instanceof Style) {
-                $item->unregister();
-            }
-        }
-    }
-
     public function getItems(): array
     {
         return array_merge($this->getCommonItems(), is_admin() ? $this->getAdminItems() : $this->getFrontItems());
@@ -74,5 +65,14 @@ class StyleRegisterer implements RegistererInterface
         $items = $this->frontRegistrables ? call_user_func($this->frontRegistrables) : [];
 
         return apply_filters('naran_axis_style_registrable/front', $items, $this->layout->getSlug());
+    }
+
+    public function unregisterItems()
+    {
+        foreach ($this->getItems() as $item) {
+            if ($item instanceof Style) {
+                $item->unregister();
+            }
+        }
     }
 }

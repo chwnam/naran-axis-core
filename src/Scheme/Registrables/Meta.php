@@ -34,6 +34,22 @@ class Meta implements RegistrableInterface
     private array $args;
 
     /**
+     * Constructor method
+     *
+     * @param string $metaKey    meta key name.
+     * @param string $objectType meta field type.
+     * @param array  $args       meta field args.
+     *
+     * @see register_meta()
+     */
+    public function __construct(string $objectType, string $metaKey, array $args)
+    {
+        $this->objectType = $objectType;
+        $this->metaKey    = $metaKey;
+        $this->args       = $args;
+    }
+
+    /**
      * @param string $objectType
      * @param string $metaKey
      * @param string $objectSubtype
@@ -55,22 +71,6 @@ class Meta implements RegistrableInterface
         }
 
         return null;
-    }
-
-    /**
-     * Constructor method
-     *
-     * @param string $metaKey    meta key name.
-     * @param string $objectType meta field type.
-     * @param array  $args       meta field args.
-     *
-     * @see register_meta()
-     */
-    public function __construct(string $objectType, string $metaKey, array $args)
-    {
-        $this->objectType = $objectType;
-        $this->metaKey    = $metaKey;
-        $this->args       = $args;
     }
 
     public function register()
@@ -150,16 +150,6 @@ class Meta implements RegistrableInterface
     }
 
     /**
-     * Get meta key.
-     *
-     * @return string
-     */
-    public function getKey(): string
-    {
-        return $this->metaKey;
-    }
-
-    /**
      * Get meta field value.
      *
      * @param mixed $objectId
@@ -192,38 +182,31 @@ class Meta implements RegistrableInterface
     }
 
     /**
-     * Update meta field.
+     * Get safe object ID.
      *
      * @param mixed $objectId
-     * @param mixed $metaValue
-     * @param mixed $prevValue
      *
-     * @return bool|int|\WP_Error
+     * @return false|int
      */
-    public function update($objectId, $metaValue, $prevValue = '')
+    protected function _getId($objectId)
     {
-        switch ($this->objectType) {
-            case 'comment':
-                return update_comment_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
-
-            case 'post':
-                return update_post_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
-
-            case 'term':
-                return update_term_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
-
-            case 'user':
-                return update_user_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
-
-            default:
-                return update_metadata(
-                    $this->objectType,
-                    $this->_getId($objectId),
-                    $this->metaKey,
-                    $metaValue,
-                    $prevValue
-                );
+        if (is_int($objectId) || is_numeric($objectId)) {
+            return intval($objectId);
+        } elseif ($objectId instanceof WP_Post || $objectId instanceof WP_User) {
+            return $objectId->ID;
+        } elseif ($objectId instanceof WP_Term) {
+            return $objectId->term_id;
+        } elseif ($objectId instanceof WP_Comment) {
+            return $objectId->comment_post_ID;
+        } elseif (is_array($objectId) && isset($objectId['ID'])) {
+            return $objectId['ID'];
+        } elseif (is_object($objectId) && isset($objectId->ID)) {
+            return $objectId->ID;
+        } elseif (class_exists('\WC_Product') && is_a($objectId, '\WC_Product')) {
+            return $objectId->get_id();
         }
+
+        return false;
     }
 
     /**
@@ -266,32 +249,48 @@ class Meta implements RegistrableInterface
         }
     }
 
+    /**
+     * Get meta key.
+     *
+     * @return string
+     */
+    public function getKey(): string
+    {
+        return $this->metaKey;
+    }
 
     /**
-     * Get safe object ID.
+     * Update meta field.
      *
      * @param mixed $objectId
+     * @param mixed $metaValue
+     * @param mixed $prevValue
      *
-     * @return false|int
+     * @return bool|int|WP_Error
      */
-    protected function _getId($objectId)
+    public function update($objectId, $metaValue, $prevValue = '')
     {
-        if (is_int($objectId) || is_numeric($objectId)) {
-            return intval($objectId);
-        } elseif ($objectId instanceof WP_Post || $objectId instanceof WP_User) {
-            return $objectId->ID;
-        } elseif ($objectId instanceof WP_Term) {
-            return $objectId->term_id;
-        } elseif ($objectId instanceof WP_Comment) {
-            return $objectId->comment_post_ID;
-        } elseif (is_array($objectId) && isset($objectId['ID'])) {
-            return $objectId['ID'];
-        } elseif (is_object($objectId) && isset($objectId->ID)) {
-            return $objectId->ID;
-        } elseif (class_exists('\WC_Product') && is_a($objectId, '\WC_Product')) {
-            return $objectId->get_id();
-        }
+        switch ($this->objectType) {
+            case 'comment':
+                return update_comment_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
 
-        return false;
+            case 'post':
+                return update_post_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
+
+            case 'term':
+                return update_term_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
+
+            case 'user':
+                return update_user_meta($this->_getId($objectId), $this->metaKey, $metaValue, $prevValue);
+
+            default:
+                return update_metadata(
+                    $this->objectType,
+                    $this->_getId($objectId),
+                    $this->metaKey,
+                    $metaValue,
+                    $prevValue
+                );
+        }
     }
 }
