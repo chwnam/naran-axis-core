@@ -3,7 +3,6 @@
 
 namespace Naran\Axis\Core\Layout;
 
-
 class LayoutFactory
 {
     public static function pluginLayout(array $args = []): PluginLayout
@@ -51,6 +50,7 @@ class LayoutFactory
             'textdomain'      => '',
             'title'           => '',
             'version'         => '',
+            'proirity'        => 10,
             'scheme_path'     => null,
             'module_provider' => null,
         ];
@@ -70,6 +70,8 @@ class LayoutFactory
             $layout->setVersion($args['version']);
         }
 
+        $layout->setPriority(absint($args['priority']));
+
         if ( ! empty($args['scheme_path'])) {
             $layout->setSchemePath($args['scheme_path']);
         } elseif ($layout instanceof PluginLayout) {
@@ -78,7 +80,7 @@ class LayoutFactory
             $layout->setSchemePath(get_stylesheet_directory() . '/src/scheme.php');
         }
 
-        $layout->setModuleProvider($args['module_provider']);
+        $layout->set('module_provider', $args['module_provider']);
     }
 
     public static function themeLayout(array $args = []): ThemeLayout

@@ -3,13 +3,13 @@
 
 namespace Naran\Axis\Core\Layout;
 
+use Naran\Axis\Core\Module\Provider\LayoutModuleProvider;
 use Naran\Axis\Core\Scheme\SchemeLoader;
 
 
 abstract class BaseLayout implements LayoutInterface
 {
-    /** @var mixed */
-    private $moduleProvider = null;
+    private LayoutModuleProvider $provider;
 
     private string $schemePath = '';
 
@@ -20,6 +20,10 @@ abstract class BaseLayout implements LayoutInterface
     private string $title = '';
 
     private string $version = '';
+
+    private int $priority;
+
+    private array $storage = [];
 
     public function getTextdomain(): string
     {
@@ -51,6 +55,16 @@ abstract class BaseLayout implements LayoutInterface
         $this->version = $version;
     }
 
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(int $priority)
+    {
+        $this->priority = $priority;
+    }
+
     public function getSchemePath(): string
     {
         return $this->schemePath;
@@ -59,15 +73,6 @@ abstract class BaseLayout implements LayoutInterface
     public function setSchemePath(string $path)
     {
         $this->schemePath = $path;
-    }
-
-    public function getModuleProvider()
-    {
-        return $this->moduleProvider;
-    }
-
-    public function setModuleProvider($provider)
-    {
     }
 
     public function activation()
@@ -84,9 +89,24 @@ abstract class BaseLayout implements LayoutInterface
         if ( ! $moduleLoaded) {
             $moduleLoaded = true;
 
-//            new ModuleLoader($this);
+            LayoutModuleProvider::factory($this, $this->get('module_provider'));
+            $this->set('module_provider', null);
 
             do_action('naran_axis_modules_loaded', $this->getSlug());
+        }
+    }
+
+    public function get(string $name)
+    {
+        return $this->storage[$name] ?? null;
+    }
+
+    public function set(string $name, $value)
+    {
+        if (is_null($value)) {
+            unset($this->storage[$name]);
+        } else {
+            $this->storage[$name] = $value;
         }
     }
 
@@ -111,6 +131,16 @@ abstract class BaseLayout implements LayoutInterface
 
             do_action('naran_axis_scheme_loaded', $this->getSlug());
         }
+    }
+
+    public function getProvider(): LayoutModuleProvider
+    {
+        return $this->provider;
+    }
+
+    public function setProvider(LayoutModuleProvider $provider)
+    {
+        $this->provider = $provider;
     }
 
     public function deactivation()
